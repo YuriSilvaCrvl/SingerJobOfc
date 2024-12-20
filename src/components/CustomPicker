@@ -1,0 +1,67 @@
+// src/components/CustomPicker.js
+import React, { useState } from 'react';
+import { View, StyleSheet } from 'react-native';
+import { 
+  Menu, 
+  Button, 
+  Text, 
+  Divider 
+} from 'react-native-paper';
+
+const CustomPicker = ({
+  label,
+  options,
+  selectedValue,
+  onValueChange,
+  style,
+  placeholder = 'Selecione uma opção'
+}) => {
+  const [visible, setVisible] = useState(false);
+
+  const openMenu = () => setVisible(true);
+  const closeMenu = () => setVisible(false);
+
+  const handleSelect = (value) => {
+    onValueChange(value);
+    closeMenu();
+  };
+
+  return (
+    <View style={[styles.container, style]}>
+      <Menu
+        visible={visible}
+        onDismiss={closeMenu}
+        anchor={
+          <Button 
+            mode="outlined" 
+            onPress={openMenu}
+            style={styles.button}
+          >
+            {selectedValue || placeholder}
+          </Button>
+        }
+      >
+        {options.map((option, index) => (
+          <React.Fragment key={index}>
+            <Menu.Item 
+              onPress={() => handleSelect(option.value || option)}
+              title={option.label || option}
+            />
+            {index < options.length - 1 && <Divider />}
+          </React.Fragment>
+        ))}
+      </Menu>
+    </View>
+  );
+};
+
+const styles = StyleSheet.create({
+  container: {
+    marginBottom: 10,
+  },
+  button: {
+    backgroundColor: 'white',
+  },
+});
+
+export default CustomPicker;
